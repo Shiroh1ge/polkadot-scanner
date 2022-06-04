@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "workspaces:foreach": "yarn workspaces foreach -p --exclude polkadot-scanner --verbose",
-    "start": "yarn workspaces:foreach run start",
+    "start": "concurrently \"cd backend && yarn start\" \"cd frontend && yarn start\"",
     "test": "yarn workspaces:foreach run test",
     "test:coverage": "yarn workspaces:foreach run test:coverage",
     "build": "yarn workspaces:foreach run build",
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "7.2.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",

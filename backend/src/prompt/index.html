@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+</head>
+
+<body>
+<h2 id="main-header">Password prompt</h2>
+</body>
+<script>
+  async function authenticate(password) {
+    const url = 'http://localhost:3001/auth';
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify({password})
+
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      // get error message from body or default to response status
+      const error = data || response.status;
+      return Promise.reject(error);
+    }
+
+
+    return data;
+  }
+
+  function redirectToApp(token) {
+    const url = `http://localhost:3001/app?token=${token}`;
+    window.location.href = url;
+  }
+
+  async function promptUser() {
+    const password = prompt('Please enter your password', 'Password');
+
+    try {
+      const response = await authenticate(password);
+      redirectToApp(response.token);
+
+    } catch (error) {
+      const element = document.querySelector('#main-header');
+
+      element.innerHTML = JSON.stringify(error, null, 4);
+    }
+
+  }
+
+  promptUser();
+</script>
+</html>
