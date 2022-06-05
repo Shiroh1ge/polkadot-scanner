@@ -1,41 +1,18 @@
-import { Box, Button, FormControl, FormHelperText, InputLabel, TextField, useFormControl } from '@mui/material';
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
+import { Button, FormControl, FormHelperText, TextField } from '@mui/material';
+import React from 'react';
 import EventsTable from '../../components/Table/EventsTable';
-import { FormGroup, Input } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 interface FormValues {
-  startBlock: number;
-  endBlock: number;
+  startBlock: number | undefined;
+  endBlock: number | undefined;
   endpoint: string;
 }
 
-const defaultValues: FormValues = { startBlock: 0, endBlock: 0, endpoint: 'wss://rpc.polkadot.io' };
+const defaultValues: FormValues = { startBlock: undefined, endBlock: undefined, endpoint: 'wss://rpc.polkadot.io' };
 
 const BlockchainScanner = (): JSX.Element => {
-  const { focused } = useFormControl() || {};
-  const { register, handleSubmit, reset, watch, getValues, formState, setValue } = useForm<FormValues>({ defaultValues });
-  const formValues = getValues();
-
-  // register('startBlock', { required: true })
-
-  console.log('watchChanges', formState);
-
-
-  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
-    const { name, value }: { name: keyof FormValues; value: any } = e.target;
-    let parsedValue = value;
-
-    if (name === 'endBlock' || name === 'startBlock') {
-      parsedValue = parseInt(value || 0, 10);
-    }
-
-    setValue(name, parsedValue);
-
-    console.log('formValues', getValues());
-    console.log('state', formState.dirtyFields);
-    console.log('err', formState.errors);
-  };
+  const { register, handleSubmit, formState } = useForm<FormValues>({ defaultValues, mode: 'onChange' });
 
   const onSubmit = (data: FormValues) => console.log('formdata', data);
   return (
@@ -46,30 +23,38 @@ const BlockchainScanner = (): JSX.Element => {
           autoComplete="off"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormControl className="mr-6" error={!!formState.errors.startBlock && formState.dirtyFields.startBlock}>
+          <FormControl className="mr-6" error={!!formState.errors.startBlock}>
             <TextField
               required
               type="number"
               label="Start Block"
               id="start-block"
-              {...register('startBlock', { required: true, onChange: handleInputChange, valueAsNumber: true })}
+              inputProps={register('startBlock', {
+                required: { value: true, message: 'Start block is required' },
+                valueAsNumber: true
+              })}
+
             />
-            <FormHelperText>Error</FormHelperText>
+            <FormHelperText>{formState.errors?.startBlock?.message}</FormHelperText>
           </FormControl>
-          <FormControl className="mr-6" variant="standard">
-            <TextField id="my-input" label="End Block" required {...register('endBlock', {
-              required: { value: true, message: 'End block is required' },
-              onChange: handleInputChange,
-              valueAsNumber: true
-            })}
+          <FormControl className="mr-6" variant="standard" error={!!formState.errors.endBlock}>
+            <TextField id="my-input"
+                       label="End Block"
+                       required
+                       type="number"
+                       inputProps={register('endBlock', {
+                         required: { value: true, message: 'End block is required' },
+                         valueAsNumber: true
+                       })}
             />
+            <FormHelperText>{formState.errors?.endBlock?.message}</FormHelperText>
           </FormControl>
-          <FormControl className="mr-6" variant="standard">
-            <TextField id="my-input" label="Endpoint" required {...register('endpoint', {
-              required: { value: true, message: 'Endpoint is required' },
-              onChange: handleInputChange,
-              valueAsNumber: true
-            })}/>
+          <FormControl className="mr-6" variant="standard" error={!!formState.errors.endpoint}>
+            <TextField id="my-input" label="Endpoint" required
+                       inputProps={register('endpoint', {
+                         required: { value: true, message: 'Endpoint is required' }
+                       })}/>
+            <FormHelperText>{formState.errors?.endpoint?.message}</FormHelperText>
           </FormControl>
           <Button type="submit" disabled={!formState.isValid}>Submit</Button>
         </form>
