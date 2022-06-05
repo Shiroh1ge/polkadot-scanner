@@ -1,5 +1,6 @@
-import { TextField } from '@mui/material';
+import { Table, TextField } from '@mui/material';
 import React from 'react';
+import EventsTable from '../../components/Table/EventsTable';
 
 const BlockchainScanner = (): JSX.Element => {
     return (
@@ -7,6 +8,7 @@ const BlockchainScanner = (): JSX.Element => {
             <TextField id="outlined-basic" label="Outlined" variant="outlined" />
             <TextField id="filled-basic" label="Filled" variant="filled" />
             <TextField id="standard-basic" label="Standard" variant="standard" />
+            <EventsTable></EventsTable>
         </div>
     );
 };

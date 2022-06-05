@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 const rootEl: HTMLElement = document.getElementById('root') as HTMLElement
 // enable dark theme
 rootEl.classList.add('dark')
+// apply typography
+rootEl.classList.add('prose')
 
 const root = ReactDOM.createRoot(
     rootEl
