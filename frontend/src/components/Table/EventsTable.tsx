@@ -22,11 +22,47 @@ const rows: Data[] = [
         blockNumber: 2,
         eventName: 'test_2',
         eventArguments: 'test_2, test_2'
+    },
+    {
+        id: 2,
+        blockNumber: 1,
+        eventName: 'test_1',
+        eventArguments: 'test, test'
+    },
+    {
+        id: 3,
+        blockNumber: 2,
+        eventName: 'test_2',
+        eventArguments: 'test_2, test_2'
+    },
+    {
+        id: 4,
+        blockNumber: 1,
+        eventName: 'test_1',
+        eventArguments: 'test, test'
+    },
+    {
+        id: 5,
+        blockNumber: 2,
+        eventName: 'test_2',
+        eventArguments: 'test_2, test_2'
+    },
+    {
+        id: 6,
+        blockNumber: 1,
+        eventName: 'test_1',
+        eventArguments: 'test, test'
+    },
+    {
+        id: 7,
+        blockNumber: 2,
+        eventName: 'test_2',
+        eventArguments: 'test_2, test_2'
     }
 ];
 
 const columns: GridColumns<Data> = [
-    { field: 'blockNumber', headerName: 'Block #',  width: 250},
+    { field: 'blockNumber', headerName: 'Block #',  width: 120},
     { field: 'eventName', headerName: 'Event Name', width: 250 },
     { field: 'eventArguments', headerName: 'Event Arguments', width: 250  },
 ];
@@ -35,14 +71,16 @@ const columns: GridColumns<Data> = [
 const EventsTable = () => {
 
     return (
-        <div style={{ height: 400, width: '100%' }}>
+        <div className="w-full h-full">
             <DataGrid
+                className="w-full h-full"
                 rows={rows}
                 columns={columns}
-                pageSize={5}
+                pageSize={10}
                 rowsPerPageOptions={[5]}
                 checkboxSelection={false}
                 disableSelectionOnClick={true}
+                autoHeight={true}
             />
         </div>
     );
