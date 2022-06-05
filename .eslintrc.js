@@ -1,8 +1,8 @@
 module.exports = {
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
-    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
   root: true,
   env: {
@@ -31,4 +31,16 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
   },
+  overrides: [
+    {
+      files: ['*.tsx'],
+      extends: [
+        'ts-react-important-stuff',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+      ],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint']
+    }
+  ]
 };
