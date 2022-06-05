@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Response } from 'express';
 import { AppController } from './app.controller';
 
 describe('AppController', () => {
@@ -13,9 +14,11 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(true).toBe('true');
-    });
+  it('get should call sendFile method correctly', () => {
+    const mockResponse = { sendFile: jest.fn() } as unknown as Response;
+    appController.get(mockResponse);
+
+    expect(mockResponse.sendFile).toBeCalledTimes(1);
+    expect(mockResponse.sendFile).toBeCalledWith('index.html', { root: '../frontend/build' });
   });
 });

@@ -5,7 +5,7 @@ import { AUTH_TOKEN } from '../constants/auth.constants';
 @Injectable()
 export class AuthGuard implements CanActivate {
   private validate(token: string) {
-    // usually you would create and validate the token here with a real authentication service
+    // usually you would create and validate the token with a real authentication service
     // we use a hardcoded token here for the purpose of the example
     return token === AUTH_TOKEN;
   }

@@ -1,21 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.controller';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 describe('AuthController', () => {
-  let appController: AuthService;
+  let controller: AuthController;
+  let service: AuthService;
 
   beforeEach(async () => {
+    const mockAuthService = { isPasswordValid: jest.fn().mockReturnValue(true) };
+
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AuthService],
-      providers: [],
+      controllers: [AuthController],
+      providers: [{ provide: AuthService, useValue: mockAuthService }],
     }).compile();
 
-    appController = app.get<AuthService>(AuthService);
+    controller = app.get<AuthController>(AuthController);
+    service = app.get<AuthService>(AuthService);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(true).toBe('true');
-    });
+  it('should call service method correctly', async () => {
+    await controller.authenticate('test');
+
+    expect(service.isPasswordValid).toHaveBeenCalledTimes(1);
+    expect(service.isPasswordValid).toBeCalledWith('test');
+  });
+
+  it('should throw if password is invalid', async () => {
+    jest.spyOn(service, 'isPasswordValid').mockResolvedValue(false);
+
+    await expect(controller.authenticate('test')).rejects.toThrow('Invalid password.');
   });
 });

@@ -1,13 +1,12 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../guards/auth.guard';
+import { Response } from 'express';
 
 @Controller('app')
 export class AppController {
-  constructor() {}
-
   @UseGuards(AuthGuard)
   @Get()
-  get(): string {
-    return;
+  get(@Res() response: Response): void {
+    return response.sendFile('index.html', { root: '../frontend/build' });
   }
 }

@@ -3,7 +3,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": [
-      "**/prompt/*"
+      "**/static/*"
     ],
     "watchAssets": true
   }
