@@ -1,5 +1,6 @@
 import React from 'react';
-import logo from '../../logo.svg'
+import logo from '../../assets/logo.svg'
+
 const Header = (): JSX.Element => {
     return (
         <div className="bg-blue-900 w-full h-16">
