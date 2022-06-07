@@ -14,6 +14,7 @@ interface FormValues {
 
 const defaultValues: FormValues = { startBlock: undefined, endBlock: undefined, endpoint: 'wss://rpc.polkadot.io' };
 
+
 const BlockchainScanner = (): JSX.Element => {
     const { register, handleSubmit, formState, getValues, setValue, control } = useForm<FormValues>({ defaultValues, mode: 'onChange' });
     const [ blockEvents, setBlockEvents ] = useState<BlockEvent[]>([]);
@@ -32,7 +33,7 @@ const BlockchainScanner = (): JSX.Element => {
 
     }, []);
 
-    const scan = async ({ startBlock, endBlock, endpoint }: FormValues): Promise<void> => {
+    const fetchEvents = async ({ startBlock, endBlock, endpoint }: FormValues): Promise<void> => {
       // we only create a new api client if the endpoint has changed
       if (endpoint !== currentEndpoint.current) {
         currentEndpoint.current = endpoint;
@@ -40,38 +41,37 @@ const BlockchainScanner = (): JSX.Element => {
       }
 
 
-      const latestBlock = await api.current!.rpc.chain.getBlock();
-      const hash = await api.current!.rpc.chain.getBlockHash(10627934);
-      const block = await api.current!.rpc.chain.getBlock(hash);
+      setBlockEvents([]);
 
-      const apiAt = await api.current!.at(hash);
-      await apiAt.query.system.events();
-      const allRecords = await apiAt.query.system.events((events: { event: any; phase: any; }[]) => {
-        console.log(`\nReceived ${events.length} events:`);
+        // we go through every block from the start and end block and add their events to display in the table
+        for (let current = startBlock; current! <= endBlock!; current!++){
+          const hash = await api.current!.rpc.chain.getBlockHash(current!);
+          const apiAt = await api.current!.at(hash);
+          await apiAt.query.system.events((events: { event: any; phase: any; }[]) => {
+            const newBlockEvents: BlockEvent[] = [];
 
-        const newBlockEvents: BlockEvent[] = [];
+            events.forEach((record: { event: any; }, i) => {
+              const { event } = record;
+              const blockEvent: BlockEvent = {
+                id: event.hash.toString(),
+                blockNumber: current!,
+                eventName: event.method,
+                eventArguments: JSON.stringify(event.data, null, 2)
+              };
 
-        events.forEach((record: { event: any; }, i) => {
-          const { event } = record;
-          const types = event.typeDef;
-          const blockEvent: BlockEvent = {
-            id: event.hash,
-            blockNumber: 10627934,
-            eventName: event.method,
-            eventArguments: JSON.stringify(event.data, null ,2)
-          }
+              newBlockEvents.push(blockEvent);
+            });
+            
+            setBlockEvents((prevBlockEvents: BlockEvent[]) => [...prevBlockEvents, ...newBlockEvents]);
 
-          newBlockEvents.push(blockEvent);
-        });
+          });
+        }
 
-        setBlockEvents([...blockEvents, ...newBlockEvents]);
-
-      });
     };
 
     const onSubmit = () => {
       if (formState.isValid) {
-        scan(getValues());
+        fetchEvents(getValues());
       }
     };
 

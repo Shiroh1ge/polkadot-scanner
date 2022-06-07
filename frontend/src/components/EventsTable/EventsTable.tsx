@@ -1,6 +1,7 @@
+import { Box } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid/models/colDef/gridColDef';
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { RenderCellExpand } from './RenderCellExpand';
 
 
@@ -21,16 +22,48 @@ const columns: GridColumns<BlockEvent> = [
 ];
 
 
+const QuickSearchToolbar = () => {
+  return (
+    <Box
+      sx={{
+        p: 0.5,
+        pb: 0,
+      }}
+    >
+      <GridToolbarQuickFilter
+        quickFilterParser={(searchInput: string) =>
+          searchInput
+            .split(',')
+            .map((value) => value.trim())
+            .filter((value) => value !== '')
+        }
+      />
+    </Box>
+  );
+}
+
+
 const EventsTable = ({ data }: { data: BlockEvent[] }) => {
 
   return (
     <div className="w-full h-full">
       <DataGrid
         className="w-full h-full"
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'blockNumber', sort: 'desc' }],
+          },
+        }}
+        components={{ Toolbar: QuickSearchToolbar }}
+        componentsProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
         rows={data}
         columns={columns}
         pageSize={10}
-        rowHeight={60}
+        rowHeight={50}
         rowsPerPageOptions={[5]}
         checkboxSelection={false}
         disableSelectionOnClick={true}
