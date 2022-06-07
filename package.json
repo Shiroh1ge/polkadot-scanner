@@ -13,8 +13,9 @@
     "workspaces:foreach": "yarn workspaces foreach -p --exclude polkadot-scanner --verbose",
     "start": "concurrently \"cd backend && yarn start\" \"cd frontend && yarn start\"",
     "test": "yarn workspaces:foreach run test",
+    "deploy:backend": "yarn workspace backend run deploy",
     "test:coverage": "yarn workspaces:foreach run test:coverage",
-    "build": "yarn workspaces:foreach run build",
+    "build": "yarn workspace frontend run build && yarn workspace backend run build",
     "lint": "yarn workspaces:foreach run lint"
   },
   "devDependencies": {

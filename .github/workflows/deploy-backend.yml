@@ -1,0 +1,24 @@
+name: Deploy Backend to Firebase Functions on push
+'on':
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: 'actions/checkout@v3'
+
+      - run: cp ./backend/.env.prod .env
+      - run: npm i firebase-tools -g
+      - run: yarn install
+      - run: yarn build
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - id: 'deploy'
+        run: yarn deploy:backend

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid/models/colDef/gridColDef';
 import * as React from 'react';
-import { DataGrid, GridToolbar, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { RenderCellExpand } from './RenderCellExpand';
 
 export interface BlockEvent {
@@ -17,7 +17,7 @@ const columns: GridColumns<BlockEvent> = [
   /**
    * NOTE: The RenderCellExpand is needed to show the full event arguments in the cell, as they can be too long.
    */
-  { field: 'eventArguments', headerName: 'Event Arguments', width: 250, renderCell: RenderCellExpand },
+  { field: 'eventArguments', headerName: 'Event Arguments', width: 350, renderCell: RenderCellExpand },
 ];
 
 const QuickSearchToolbar = () => {

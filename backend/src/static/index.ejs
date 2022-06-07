@@ -9,8 +9,9 @@
 <h2 id="main-header">Password prompt</h2>
 </body>
 <script>
+  const baseApiUrl = '<%= process.env.BASE_API_URL %>';
   async function authenticate(password) {
-    const url = 'http://localhost:3001/auth';
+    const url = `${baseApiUrl}/auth`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -34,14 +35,13 @@
   }
 
   function redirectToApp(token) {
-    const url = `http://localhost:3001/app?token=${token}`;
+    const url = `${baseApiUrl}/app?token=${token}`;
     window.location.href = url;
   }
 
   async function promptUser() {
     const password = prompt('Please enter your password', 'Password');
     const baseUrl= '<%= process.env.BASE_API_URL %>';
-    console.log('baseUrl', baseUrl);
     try {
       const response = await authenticate(password);
       redirectToApp(response.token);

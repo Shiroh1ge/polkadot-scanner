@@ -1,10 +1,10 @@
 import { Box, Button, FormControl, FormHelperText, LinearProgress, TextField, Typography } from '@mui/material';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise } from '@polkadot/api';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import EventsTable, { BlockEvent } from '../../components/EventsTable/EventsTable';
 import { WSS_URL_REGEX } from '../../constants/validation.constants';
-import { createPolkadotApi, usePolkadotApi } from '../../hooks/usePolkadotApi.hook';
+import { createPolkadotApi } from '../../hooks/usePolkadotApi.hook';
 
 interface FormValues {
   startBlock: number | undefined;
@@ -45,30 +45,33 @@ const BlockchainScanner = (): JSX.Element => {
     setBlockEvents([]);
     setScanningProgress(0);
 
-    // we go through every block from the start and end block and add their events to display in the table
-    for (let current = startBlock; current! <= endBlock!; current!++) {
-      const currentProgress = (100 * (current! - startBlock!)) / (endBlock! - startBlock!);
-      const hash = await api.current!.rpc.chain.getBlockHash(current!);
-      const apiAt = await api.current!.at(hash);
-      await apiAt.query.system.events((events: { event: any }[]) => {
-        const newBlockEvents: BlockEvent[] = [];
+    if (startBlock && endBlock && api.current) {
+      // we go through every block from the start and end block and add their events to display in the table
 
-        events.forEach((record: { event: any }, i) => {
-          const { event } = record;
-          const blockEvent: BlockEvent = {
-            id: event.hash.toString(),
-            blockNumber: current!,
-            eventName: event.method,
-            eventArguments: JSON.stringify(event.data, null, 2),
-          };
+      for (let current = startBlock; current <= endBlock; current++) {
+        const currentProgress = (100 * (current - startBlock)) / (endBlock - startBlock);
+        const hash = await api.current.rpc.chain.getBlockHash(current);
+        const apiAt = await api.current.at(hash);
+        await apiAt.query.system.events((events: { event: any }[]) => {
+          const newBlockEvents: BlockEvent[] = [];
 
-          newBlockEvents.push(blockEvent);
+          events.forEach((record: { event: any }) => {
+            const { event } = record;
+            const blockEvent: BlockEvent = {
+              id: event.hash.toString(),
+              blockNumber: current,
+              eventName: event.method,
+              eventArguments: JSON.stringify(event.data, null, 2),
+            };
+
+            newBlockEvents.push(blockEvent);
+          });
+
+          setBlockEvents((prevBlockEvents: BlockEvent[]) => [...prevBlockEvents, ...newBlockEvents]);
         });
 
-        setBlockEvents((prevBlockEvents: BlockEvent[]) => [...prevBlockEvents, ...newBlockEvents]);
-      });
-
-      setScanningProgress(endBlock === current ? 100 : currentProgress);
+        setScanningProgress(endBlock === current ? 100 : currentProgress);
+      }
     }
   };
 

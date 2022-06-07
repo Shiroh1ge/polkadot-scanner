@@ -29,7 +29,8 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off'
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off'
   },
   overrides: [
     {
@@ -39,6 +40,12 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:react-hooks/recommended'
       ],
+      "rules": {
+        "no-undef": "off",
+        "react/prop-types": "off",
+        "react/display-name": "off",
+        "react-hooks/exhaustive-deps": "off"
+      },
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint']
     }

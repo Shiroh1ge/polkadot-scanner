@@ -3,7 +3,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": [
-      "**/static/*"
+      "**/static/**/*"
     ],
     "watchAssets": true
   }

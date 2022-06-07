@@ -19,8 +19,8 @@ async function bootstrap() {
 
   setupViewsDir(app);
 
-  await app.listen(process.env.PORT, () => {
-    console.info('Application is running on port: ', process.env.PORT);
+  await app.listen(process.env.SERVE_PORT, () => {
+    console.info('Application is running on port: ', process.env.SERVE_PORT);
   });
 }
 bootstrap();

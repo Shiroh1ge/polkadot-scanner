@@ -7,6 +7,6 @@ export class AppController {
   @UseGuards(AuthGuard)
   @Get()
   get(@Res() response: Response): void {
-    return response.sendFile('index.html', { root: '../frontend/build' });
+    return response.sendFile('index.html', { root: './src/static/build' });
   }
 }
