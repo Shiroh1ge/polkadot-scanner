@@ -1,4 +1,4 @@
-import { Button, FormControl, FormHelperText, TextField } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, LinearProgress, TextField, Typography } from '@mui/material';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,8 +16,9 @@ const defaultValues: FormValues = { startBlock: undefined, endBlock: undefined, 
 
 
 const BlockchainScanner = (): JSX.Element => {
-    const { register, handleSubmit, formState, getValues, setValue, control } = useForm<FormValues>({ defaultValues, mode: 'onChange' });
-    const [ blockEvents, setBlockEvents ] = useState<BlockEvent[]>([]);
+    const { register, handleSubmit, formState, getValues, setValue } = useForm<FormValues>({ defaultValues, mode: 'onChange' });
+    const [blockEvents, setBlockEvents] = useState<BlockEvent[]>([]);
+    const [scanningProgress, setScanningProgress] = useState<number>(0);
     const currentEndpoint = useRef<string>(defaultValues.endpoint);
 
     const api = useRef<ApiPromise>();
@@ -40,32 +41,34 @@ const BlockchainScanner = (): JSX.Element => {
         api.current = await createPolkadotApi(currentEndpoint.current);
       }
 
-
       setBlockEvents([]);
+      setScanningProgress(0);
 
-        // we go through every block from the start and end block and add their events to display in the table
-        for (let current = startBlock; current! <= endBlock!; current!++){
-          const hash = await api.current!.rpc.chain.getBlockHash(current!);
-          const apiAt = await api.current!.at(hash);
-          await apiAt.query.system.events((events: { event: any; phase: any; }[]) => {
-            const newBlockEvents: BlockEvent[] = [];
+      // we go through every block from the start and end block and add their events to display in the table
+      for (let current = startBlock; current! <= endBlock!; current!++) {
+        const currentProgress = 100 * (current! - startBlock!) / (endBlock! - startBlock!);
+        const hash = await api.current!.rpc.chain.getBlockHash(current!);
+        const apiAt = await api.current!.at(hash);
+        await apiAt.query.system.events((events: { event: any; }[]) => {
+          const newBlockEvents: BlockEvent[] = [];
 
-            events.forEach((record: { event: any; }, i) => {
-              const { event } = record;
-              const blockEvent: BlockEvent = {
-                id: event.hash.toString(),
-                blockNumber: current!,
-                eventName: event.method,
-                eventArguments: JSON.stringify(event.data, null, 2)
-              };
+          events.forEach((record: { event: any; }, i) => {
+            const { event } = record;
+            const blockEvent: BlockEvent = {
+              id: event.hash.toString(),
+              blockNumber: current!,
+              eventName: event.method,
+              eventArguments: JSON.stringify(event.data, null, 2)
+            };
 
-              newBlockEvents.push(blockEvent);
-            });
-            
-            setBlockEvents((prevBlockEvents: BlockEvent[]) => [...prevBlockEvents, ...newBlockEvents]);
-
+            newBlockEvents.push(blockEvent);
           });
-        }
+
+          setBlockEvents((prevBlockEvents: BlockEvent[]) => [...prevBlockEvents, ...newBlockEvents]);
+        });
+
+        setScanningProgress(endBlock === current ? 100 : currentProgress);
+      }
 
     };
 
@@ -128,6 +131,18 @@ const BlockchainScanner = (): JSX.Element => {
           </form>
 
 
+        </div>
+        <div className="my-3">
+          <Box className="flex items-center">
+            <Box className="w-full mr-1">
+              <LinearProgress variant="determinate" value={scanningProgress} />
+            </Box>
+            <Box>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                scanningProgress,
+              )}%`}</Typography>
+            </Box>
+          </Box>
         </div>
 
         <div className="flex h-full w-full">
