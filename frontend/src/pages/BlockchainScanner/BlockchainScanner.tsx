@@ -33,7 +33,7 @@ const BlockchainScanner = (): JSX.Element => {
     }, []);
 
     const scan = async ({ startBlock, endBlock, endpoint }: FormValues): Promise<void> => {
-      // we only create a new api if the endpoint has changed
+      // we only create a new api client if the endpoint has changed
       if (endpoint !== currentEndpoint.current) {
         currentEndpoint.current = endpoint;
         api.current = await createPolkadotApi(currentEndpoint.current);
@@ -51,26 +51,17 @@ const BlockchainScanner = (): JSX.Element => {
 
         const newBlockEvents: BlockEvent[] = [];
 
-        events.forEach((record: { event: any; phase: any; }, i) => {
-          const { event, phase } = record;
+        events.forEach((record: { event: any; }, i) => {
+          const { event } = record;
           const types = event.typeDef;
           const blockEvent: BlockEvent = {
-            id: i,
+            id: event.hash,
             blockNumber: 10627934,
             eventName: event.method,
-            eventArguments: event.data.toString()
+            eventArguments: JSON.stringify(event.data, null ,2)
           }
 
           newBlockEvents.push(blockEvent);
-
-
-          // Show what we are busy with
-          console.log(`test \t${event.section}:${event.method}`);
-
-          // Loop through each of the parameters, displaying the type and data
-          event.data.forEach((data: { toString: () => any; }, index: string | number) => {
-            console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-          });
         });
 
         setBlockEvents([...blockEvents, ...newBlockEvents]);
