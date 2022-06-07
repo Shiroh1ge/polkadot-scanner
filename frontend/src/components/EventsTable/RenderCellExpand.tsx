@@ -19,15 +19,15 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       display: 'flex',
       '& .MuiRating-root': {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
       },
       '& .cellValue': {
         whiteSpace: 'wrap',
         overflow: 'hidden',
-        textOverflow: 'ellipsis'
-      }
-    }
-  })
+        textOverflow: 'ellipsis',
+      },
+    },
+  }),
 );
 const CellExpand = React.memo(function CellExpand(props: CellExpandProps) {
   const { width, value } = props;
@@ -60,12 +60,7 @@ const CellExpand = React.memo(function CellExpand(props: CellExpandProps) {
   }, [width]);
 
   return (
-    <div
-      ref={wrapper}
-      className={classes.root}
-      onMouseEnter={showCell}
-      onMouseLeave={hideCell}
-    >
+    <div ref={wrapper} className={classes.root} onMouseEnter={showCell} onMouseLeave={hideCell}>
       <div
         ref={cellDiv}
         style={{
@@ -73,7 +68,7 @@ const CellExpand = React.memo(function CellExpand(props: CellExpandProps) {
           width,
           display: 'block',
           position: 'absolute',
-          top: 0
+          top: 0,
         }}
       />
       <div ref={cellValue} className="cellValue">
@@ -86,10 +81,7 @@ const CellExpand = React.memo(function CellExpand(props: CellExpandProps) {
           anchorEl={anchorEl}
           style={{ width: 400, marginLeft: -17 }}
         >
-          <Paper
-            elevation={1}
-            style={{ minHeight: wrapper.current!.offsetHeight - 2, wordWrap: 'break-word' }}
-          >
+          <Paper elevation={1} style={{ minHeight: wrapper.current!.offsetHeight - 2, wordWrap: 'break-word' }}>
             <div style={{ padding: 5 }}>{value}</div>
           </Paper>
         </Popper>
@@ -99,10 +91,5 @@ const CellExpand = React.memo(function CellExpand(props: CellExpandProps) {
 });
 
 export function RenderCellExpand(params: GridCellParams) {
-  return (
-    <CellExpand
-      value={params.value ? params.value.toString() : ''}
-      width={params.colDef.width || 10}
-    />
-  );
+  return <CellExpand value={params.value ? params.value.toString() : ''} width={params.colDef.width || 10} />;
 }

@@ -20,12 +20,10 @@ export const usePolkadotApi = (endpoint: string) => {
       await api.current.isReady;
       console.log('api.current.isReady', api.current.isReady);
     })();
-
   }, [endpoint]);
 
   return api.current;
 };
-
 
 export const createPolkadotApi = async (endpoint: string) => {
   const provider = new WsProvider(endpoint, 100);
@@ -34,9 +32,7 @@ export const createPolkadotApi = async (endpoint: string) => {
     console.log('Something went wrong when trying to connect to the endpoint: ', error);
   });
 
-  return await ApiPromise.create(
-    {
-      provider
-    }
-  )
+  return await ApiPromise.create({
+    provider,
+  });
 };

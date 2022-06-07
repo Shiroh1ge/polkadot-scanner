@@ -4,18 +4,13 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   darkMode: 'class',
   theme: {
-    extend: {}
+    extend: {},
   },
   variants: {
-    extend: {}
+    extend: {},
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ]
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 };

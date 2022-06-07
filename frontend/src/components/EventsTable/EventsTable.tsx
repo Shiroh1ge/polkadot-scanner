@@ -4,7 +4,6 @@ import * as React from 'react';
 import { DataGrid, GridToolbar, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { RenderCellExpand } from './RenderCellExpand';
 
-
 export interface BlockEvent {
   id: number;
   blockNumber: number;
@@ -18,9 +17,8 @@ const columns: GridColumns<BlockEvent> = [
   /**
    * NOTE: The RenderCellExpand is needed to show the full event arguments in the cell, as they can be too long.
    */
-  { field: 'eventArguments', headerName: 'Event Arguments', width: 250, renderCell: RenderCellExpand }
+  { field: 'eventArguments', headerName: 'Event Arguments', width: 250, renderCell: RenderCellExpand },
 ];
-
 
 const QuickSearchToolbar = () => {
   return (
@@ -40,11 +38,9 @@ const QuickSearchToolbar = () => {
       />
     </Box>
   );
-}
-
+};
 
 const EventsTable = ({ data }: { data: BlockEvent[] }) => {
-
   return (
     <div className="w-full h-full">
       <DataGrid
