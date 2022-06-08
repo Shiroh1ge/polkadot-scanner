@@ -25,9 +25,9 @@ export const usePolkadotApi = (endpoint: string) => {
 };
 
 export const createPolkadotApi = async (endpoint: string) => {
-  const provider = new WsProvider(endpoint, 100);
-  provider.on('error', (error) => {
-    provider.disconnect();
+  const provider = new WsProvider(endpoint);
+  provider.on('error', async (error) => {
+    await provider.disconnect();
     console.error('Something went wrong when trying to connect to the endpoint: ', error);
   });
 

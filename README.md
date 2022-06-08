@@ -2,7 +2,7 @@
 
 ### Setup
 
-1. Make sure you have [NodeJS](https://nodejs.org/) installed.
+1. Make sure you have [NodeJS](https://nodejs.org/)  [Yarn]( [NodeJS](https://nodejs.org/))  and installed.
 2. Install your dependencies
 
     ```

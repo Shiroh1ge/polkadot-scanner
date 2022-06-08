@@ -1,4 +1,14 @@
-import { Box, Button, FormControl, FormHelperText, LinearProgress, TextField, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  LinearProgress,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { ApiPromise } from '@polkadot/api';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,7 +32,8 @@ const BlockchainScanner = (): JSX.Element => {
   const [blockEvents, setBlockEvents] = useState<BlockEvent[]>([]);
   const [scanningProgress, setScanningProgress] = useState<number>(0);
   const currentEndpoint = useRef<string>(defaultValues.endpoint);
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const api = useRef<ApiPromise>();
 
   useEffect(() => {
@@ -34,6 +45,10 @@ const BlockchainScanner = (): JSX.Element => {
 
     setInitialEndBlockValue();
   }, []);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const fetchEvents = async ({ startBlock, endBlock, endpoint }: FormValues): Promise<void> => {
     setBlockEvents([]);
@@ -49,6 +64,8 @@ const BlockchainScanner = (): JSX.Element => {
     if (!api.current) {
       // we can display an error message here
       console.error('Api client could not initialize.');
+      setSnackbarMessage('Api client could not initialize.');
+      setSnackbarOpen(true);
       return;
     }
 
@@ -87,9 +104,9 @@ const BlockchainScanner = (): JSX.Element => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (formState.isValid) {
-      fetchEvents(getValues());
+      await fetchEvents(getValues());
     }
   };
 
@@ -166,6 +183,18 @@ const BlockchainScanner = (): JSX.Element => {
       <div className="flex h-full w-full">
         <EventsTable data={blockEvents} />
       </div>
+
+      <Snackbar
+        open={snackbarOpen}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      >
+        <Alert onClose={handleSnackbarClose} severity="error">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
