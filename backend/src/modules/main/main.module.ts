@@ -5,7 +5,6 @@ import { AppModule } from '../app/app.module';
 import { AuthModule } from '../auth/auth.module';
 import { MainController } from './main.controller';
 
-// const reactAppPath = join(__dirname, '../../../../frontend/build');
 const reactAppPath = join(__dirname, '..', '..', 'static/build');
 const path = join(__dirname, '..', '..', 'static');
 
