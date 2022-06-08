@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import EventsTable, { BlockEvent } from '../../components/EventsTable/EventsTable';
 import { WSS_URL_REGEX } from '../../constants/validation.constants';
-import { createPolkadotApi } from '../../hooks/usePolkadotApi.hook';
+import { createPolkadotApi } from '../../utils/polkadot-api.utils';
 
 interface FormValues {
   startBlock: number | undefined;
@@ -28,7 +28,7 @@ const BlockchainScanner = (): JSX.Element => {
   useEffect(() => {
     const setInitialEndBlockValue = async () => {
       api.current = await createPolkadotApi(currentEndpoint.current);
-      const latestBlock = await api.current.rpc.chain.getBlock();
+      const latestBlock = await api.current?.rpc.chain.getBlock();
       setValue('endBlock', latestBlock?.block.header.number.toNumber());
     };
 
@@ -52,16 +52,21 @@ const BlockchainScanner = (): JSX.Element => {
         const currentProgress = (100 * (current - startBlock)) / (endBlock - startBlock);
         const hash = await api.current.rpc.chain.getBlockHash(current);
         const apiAt = await api.current.at(hash);
+        const now = (await apiAt.query.timestamp.now()).toString();
+        const timestamp = new Date(parseInt(now)).toISOString();
+
         await apiAt.query.system.events((events: { event: any }[]) => {
           const newBlockEvents: BlockEvent[] = [];
 
           events.forEach((record: { event: any }) => {
             const { event } = record;
+
             const blockEvent: BlockEvent = {
               id: event.hash.toString(),
               blockNumber: current,
               eventName: event.method,
               eventArguments: JSON.stringify(event.data, null, 2),
+              timestamp,
             };
 
             newBlockEvents.push(blockEvent);

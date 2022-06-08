@@ -9,6 +9,7 @@ export interface BlockEvent {
   blockNumber: number;
   eventName: string;
   eventArguments: string;
+  timestamp: string;
 }
 
 const columns: GridColumns<BlockEvent> = [
@@ -18,6 +19,7 @@ const columns: GridColumns<BlockEvent> = [
    * NOTE: The RenderCellExpand is needed to show the full event arguments in the cell, as they can be too long.
    */
   { field: 'eventArguments', headerName: 'Event Arguments', width: 350, renderCell: RenderCellExpand },
+  { field: 'timestamp', headerName: 'Timestamp', width: 250 },
 ];
 
 const QuickSearchToolbar = () => {

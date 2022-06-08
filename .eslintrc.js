@@ -30,7 +30,8 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off'
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    'no-console': 'off',
   },
   overrides: [
     {
@@ -44,7 +45,8 @@ module.exports = {
         "no-undef": "off",
         "react/prop-types": "off",
         "react/display-name": "off",
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        'no-console': 'off',
       },
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint']
