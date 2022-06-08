@@ -89,7 +89,13 @@ const BlockchainScanner = (): JSX.Element => {
   return (
     <div className="flex flex-col py-6">
       <div className="mb-6">
-        <form className="flex items-center" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex items-center"
+          aria-label="form"
+          noValidate
+          autoComplete="off"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <FormControl className="mr-6" error={!!formState.errors.startBlock}>
             <TextField
               required

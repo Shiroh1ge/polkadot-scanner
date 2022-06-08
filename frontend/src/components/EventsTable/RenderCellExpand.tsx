@@ -1,12 +1,15 @@
 import { Paper, Popper, Theme } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import { GridCellParams } from '@mui/x-data-grid';
-import { isOverflown } from '@mui/x-data-grid/utils/domUtils';
 import * as React from 'react';
 
 interface CellExpandProps {
   value: string;
   width: number;
+}
+
+function isOverflown(element: HTMLElement) {
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting on push
+name: Deploy Frontend to Firebase Hosting on push
 'on':
   push:
     branches:

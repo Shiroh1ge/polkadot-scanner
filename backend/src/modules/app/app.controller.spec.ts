@@ -19,6 +19,6 @@ describe('AppController', () => {
     appController.get(mockResponse);
 
     expect(mockResponse.sendFile).toBeCalledTimes(1);
-    expect(mockResponse.sendFile).toBeCalledWith('index.html', { root: '../frontend/build' });
+    expect(mockResponse.sendFile).toBeCalledWith('index.html', { root: './src/static/build' });
   });
 });

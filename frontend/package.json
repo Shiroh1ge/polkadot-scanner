@@ -6,7 +6,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test": "jest",
+    "test": "jest --config jest.config.ts",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage"
   },
@@ -35,8 +35,12 @@
     "@types/node": "17.0.39",
     "@types/react": "18.0.11",
     "@types/react-dom": "18.0.5",
+    "identity-obj-proxy": "3.0.0",
     "jest": "28.1.0",
-    "jest-cli": "28.1.0"
+    "jest-cli": "28.1.0",
+    "jest-environment-jsdom": "28.1.1",
+    "jest-svg-transformer": "1.0.0",
+    "ts-jest": "28.0.4"
   },
   "browserslist": [
     "last 2 chrome version",
