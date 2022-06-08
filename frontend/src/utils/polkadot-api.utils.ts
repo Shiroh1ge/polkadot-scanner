@@ -14,11 +14,10 @@ export const usePolkadotApi = (endpoint: string) => {
 
       provider.on('error', (error) => {
         provider.disconnect();
-        console.log('Something went wrong when trying to connect to the endpoint: ', error);
+        console.error('Something went wrong when trying to connect to the endpoint: ', error);
       });
 
       await api.current.isReady;
-      console.log('api.current.isReady', api.current.isReady);
     })();
   }, [endpoint]);
 
@@ -29,10 +28,18 @@ export const createPolkadotApi = async (endpoint: string) => {
   const provider = new WsProvider(endpoint, 100);
   provider.on('error', (error) => {
     provider.disconnect();
-    console.log('Something went wrong when trying to connect to the endpoint: ', error);
+    console.error('Something went wrong when trying to connect to the endpoint: ', error);
   });
 
-  return await ApiPromise.create({
-    provider,
-  });
+  let client;
+
+  try {
+    client = await ApiPromise.create({
+      provider,
+    });
+  } catch (error) {
+    console.error('Client could not initialize : ', error);
+  }
+
+  return client;
 };

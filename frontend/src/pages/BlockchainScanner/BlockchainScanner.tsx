@@ -36,14 +36,21 @@ const BlockchainScanner = (): JSX.Element => {
   }, []);
 
   const fetchEvents = async ({ startBlock, endBlock, endpoint }: FormValues): Promise<void> => {
+    setBlockEvents([]);
+    setScanningProgress(0);
+
     // we only create a new api client if the endpoint has changed
     if (endpoint !== currentEndpoint.current) {
       currentEndpoint.current = endpoint;
+      api.current = undefined;
       api.current = await createPolkadotApi(currentEndpoint.current);
     }
 
-    setBlockEvents([]);
-    setScanningProgress(0);
+    if (!api.current) {
+      // we can display an error message here
+      console.error('Api client could not initialize.');
+      return;
+    }
 
     if (startBlock && endBlock && api.current) {
       // we go through every block from the start and end block and add their events to display in the table
