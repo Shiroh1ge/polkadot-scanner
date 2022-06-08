@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: 'actions/checkout@v3'
 
-      - run: cp ./backend/.env.prod .env
       - run: npm i firebase-tools -g
+      - run: cp ./backend/.env.prod ./backend/.env
       - run: yarn install
       - run: yarn build
 
