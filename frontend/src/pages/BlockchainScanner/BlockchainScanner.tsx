@@ -13,6 +13,7 @@ import { ApiPromise } from '@polkadot/api';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import EventsTable, { BlockEvent } from '../../components/EventsTable/EventsTable';
+import { DEFAULT_API_URL } from '../../constants/api.constants';
 import { WSS_URL_REGEX } from '../../constants/validation.constants';
 import { createPolkadotApi } from '../../utils/polkadot-api.utils';
 
@@ -22,10 +23,10 @@ interface FormValues {
   endpoint: string;
 }
 
-const defaultValues: FormValues = { startBlock: undefined, endBlock: undefined, endpoint: 'wss://rpc.polkadot.io' };
+const defaultValues: FormValues = { startBlock: undefined, endBlock: undefined, endpoint: DEFAULT_API_URL };
 
 const BlockchainScanner = (): JSX.Element => {
-  const { register, handleSubmit, formState, getValues, setValue } = useForm<FormValues>({
+  const { register, handleSubmit, formState, getValues, setValue, watch } = useForm<FormValues>({
     defaultValues,
     mode: 'onChange',
   });
@@ -62,7 +63,6 @@ const BlockchainScanner = (): JSX.Element => {
     }
 
     if (!api.current) {
-      // we can display an error message here
       console.error('Api client could not initialize.');
       setSnackbarMessage('Api client could not initialize.');
       setSnackbarOpen(true);
@@ -125,46 +125,55 @@ const BlockchainScanner = (): JSX.Element => {
               required
               type="number"
               label="Start Block"
-              id="start-block"
+              id="start-block-input"
               InputLabelProps={{ shrink: true }}
-              inputProps={register('startBlock', {
-                required: { value: true, message: 'Start block is required' },
-                valueAsNumber: true,
-              })}
+              inputProps={{
+                'data-testid': 'start-block-input',
+                ...register('startBlock', {
+                  required: { value: true, message: 'Start block is required' },
+                  valueAsNumber: true,
+                }),
+              }}
             />
             <FormHelperText>{formState.errors?.startBlock?.message}</FormHelperText>
           </FormControl>
           <FormControl className="mr-6" variant="standard" error={!!formState.errors.endBlock}>
             <TextField
-              id="my-input"
+              id="end-block-input"
               label="End Block"
               required
               type="number"
               InputLabelProps={{ shrink: true }}
-              inputProps={register('endBlock', {
-                required: { value: true, message: 'End block is required' },
-                valueAsNumber: true,
-              })}
+              inputProps={{
+                'data-testid': 'end-block-input',
+                ...register('endBlock', {
+                  required: { value: true, message: 'End block is required' },
+                  valueAsNumber: true,
+                }),
+              }}
             />
             <FormHelperText>{formState.errors?.endBlock?.message}</FormHelperText>
           </FormControl>
           <FormControl className="mr-6 w-80" variant="standard" error={!!formState.errors.endpoint}>
             <TextField
-              id="my-input"
+              id="endpoint-input"
               label="Endpoint"
               required
               InputLabelProps={{ shrink: true }}
-              inputProps={register('endpoint', {
-                required: { value: true, message: 'Endpoint is required' },
-                pattern: {
-                  value: WSS_URL_REGEX,
-                  message: 'Endpoint format is invalid',
-                },
-              })}
+              inputProps={{
+                'data-testid': 'endpoint-input',
+                ...register('endpoint', {
+                  required: { value: true, message: 'Endpoint is required' },
+                  pattern: {
+                    value: WSS_URL_REGEX,
+                    message: 'Endpoint format is invalid',
+                  },
+                }),
+              }}
             />
             <FormHelperText>{formState.errors?.endpoint?.message}</FormHelperText>
           </FormControl>
-          <Button type="submit" disabled={!formState.isValid} variant="contained">
+          <Button type="submit" data-testid="submit-button" disabled={!formState.isValid} variant="contained">
             Scan
           </Button>
         </form>

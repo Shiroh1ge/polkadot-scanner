@@ -30,14 +30,7 @@ const QuickSearchToolbar = () => {
         pb: 0,
       }}
     >
-      <GridToolbarQuickFilter
-        quickFilterParser={(searchInput: string) =>
-          searchInput
-            .split(',')
-            .map((value) => value.trim())
-            .filter((value) => value !== '')
-        }
-      />
+      <GridToolbarQuickFilter />
     </Box>
   );
 };
